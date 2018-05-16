@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="author" content="GracoTW">
+    <meta name="copyright" content="Public Domain">
+    <title>台灣冥政府身份證產生器</title>
+    <script type="text/javascript">
+      <!-- 
+	   function f1(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_ROCID');
+	   svge1.children[0].textContent = text1.value.substring(0,10);
+	   }
+	   function f2(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_CNAME');
+	   svge1.children[0].textContent = text1.value;
+	   }
+	   function f3(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_ENAME');
+	   svge1.children[0].textContent = text1.value;
+	   }
+	   function f4(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_GENDER');
+	   svge1.children[0].textContent = text1.value.substring(0,1);
+	   }
+	   function f5(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_HEIGHT');
+	   svge1.children[0].textContent = text1.value;
+	   }
+	   function f6(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_WEIGHT');
+	   svge1.children[0].textContent = text1.value;
+	   }
+	   function f7(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_HAIRCOLOR');
+	   svge1.children[0].textContent = text1.value.substring(0,2);
+	   }
+	   function f8(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_EYECOLOR');
+	   svge1.children[0].textContent = text1.value.substring(0,2);
+	   }
+	   function f9(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_BIRTHDATE');
+	   svge1.children[0].textContent = text1.value;
+	   }
+	   function f10(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_ISSUEDATE');
+	   svge1.children[0].textContent = text1.value;
+	   }
+	   // -->
+    </script>
+  </head>
+  <body>
+    <form name="data1" action="#">
+      <p>
+	<label>身份證號</label>
+	<input type="text" name="t0" size="10" value="B000000000" onchange="javascript:f1(data1.t0);" onkeypress="javascript:f1(data1.t0);" onkeyup="javascript:f1(data1.t0);"><br />
+	<label>中文姓名</label>
+	<input type="text" name="t1" size="10" value="林志障" onchange="javascript:f2(data1.t1);" onkeypress="javascript:f2(data1.t1);" onkeyup="javascript:f2(data1.t1);">
+	<label>英文姓名</label>
+	<input type="text" name="t3" size="10" value="STU-PID LIN" onchange="javascript:f3(data1.t3);" onkeypress="javascript:f3(data1.t3);" onkeyup="javascript:f3(data1.t3);"><br />
+	<label>性別</label>
+	<input type="text" name="t4" size="1" value="M" onchange="javascript:f4(data1.t4);" onkeypress="javascript:f4(data1.t4);" onkeyup="javascript:f4(data1.t4);">
+	<label>身高</label>
+	<input type="text" name="t5" size="3" value="170" onchange="javascript:f5(data1.t5);" onkeypress="javascript:f5(data1.t5);" onkeyup="javascript:f5(data1.t5);">
+	<label>體重</label>
+	<input type="text" name="t6" size="3" value="60" onchange="javascript:f6(data1.t6);" onkeypress="javascript:f6(data1.t6);" onkeyup="javascript:f6(data1.t6);">
+	<label>髮色</label>
+	<input type="text" name="t7" size="2" value="BK" onchange="javascript:f7(data1.t7);" onkeypress="javascript:f7(data1.t7);" onkeyup="javascript:f7(data1.t7);">
+	<label>眼珠</label>
+	<input type="text" name="t8" size="2" value="BN" onchange="javascript:f8(data1.t8);" onkeypress="javascript:f8(data1.t8);" onkeyup="javascript:f8(data1.t8);"><br />
+	<label>生日</label>
+	<input type="text" name="t9" size="15" value="1980.01.01" onchange="javascript:f9(data1.t9);" onkeypress="javascript:f9(data1.t9);" onkeyup="javascript:f9(data1.t9);"><br />
+	<label>發證日期</label>
+	<input type="text" name="t10" size="15" value="2018.05.10" onchange="javascript:f10(data1.t10);" onkeypress="javascript:f10(data1.t10);" onkeyup="javascript:f10(data1.t10);">
+      </p>
+    </form>
+    <p>
+      <center>
+	<object id="svg_object" width="33%" data="USMGTGG_ID.svg" type="image/svg+xml">
+	</object>
+      </center>
+    </p>
+  </body>
+</html>

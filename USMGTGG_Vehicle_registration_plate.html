@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="zh">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="author" content="GracoTW">
+    <meta name="copyright" content="Public Domain">
+    <title>台灣冥政府車牌產生器</title>
+    <script type="text/javascript">
+      <!-- 
+	   function f1(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_id0');
+	   svge1.children[0].textContent = text1.value.substring(0,2);
+	   }
+	   function f2(text1) {
+	   var svg = document.getElementById('svg_object');
+	   var svgDoc = svg.contentDocument;
+	   var svge1 = svgDoc.getElementById('text_id1');
+	   svge1.children[0].textContent = text1.value.substring(0,2);
+	   }
+	   // -->
+    </script>
+  </head>
+  <body>
+    <form name="data1" action="#">
+      <p>
+	<label>請輸入車牌號碼: </label>
+	<input type="text" name="t0" size="2" value="00" onchange="javascript:f1(data1.t0);" onkeypress="javascript:f1(data1.t0);" onkeyup="javascript:f1(data1.t0);">
+	<label>-</label>
+	<input type="text" name="t1" size="2" value="00" onchange="javascript:f2(data1.t1);" onkeypress="javascript:f2(data1.t1);" onkeyup="javascript:f2(data1.t1);">
+      </p>
+    </form>
+    <p>
+      <object id="svg_object" width="99%" data="USMGTGG_Vehicle_registration_plate.svg" type="image/svg+xml">
+      </object>
+    </p>
+  </body>
+</html>

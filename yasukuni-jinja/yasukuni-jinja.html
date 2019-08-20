@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>靖國鬼社打鬼祭</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+<canvas id="myCanvas" width="100%" height="100%"></canvas>
+
+<script>
+  var numOfGhost = 100;
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  var bgImage = new Image();
+  bgImage.src = '1024px-Yasukuni_Jinja.jpeg';
+  var winImage = new Image();
+  winImage.src = 'Hsu_Yung-Chang_Republic_of_China_1945.jpg';
+  var ghostImage = new Image();
+  ghostImage.src = 'ghosts-3lvl3col-60px.png';
+  var ghostArray = new Array();
+
+  function Ghost1(life, x, y, moveFunction, type) {
+      this.x = x;
+      this.y = y;
+      this.life = life,
+      this.moveFunction = moveFunction;
+      this.moveData = 0;
+      this.type = type;
+  }
+
+  function ghostMoveStill(ghost) {
+      if (ctx.canvas.width * ghost.x < 30) {
+	  if (ghost.x < 1.0) {
+	      ghost.x += 1.0 / ctx.canvas.width;
+	  }
+      }
+      if (ctx.canvas.height * ghost.y < 30) {
+	  if (ghost.y < 1.0) {
+	      ghost.y += 1.0 / ctx.canvas.height;
+	  }
+      }
+      if (ctx.canvas.width * ghost.x >= ctx.canvas.width-30) {
+	  if (ghost.x > 0.0) {
+	      ghost.x -= 1.0 / ctx.canvas.width;
+	  }
+      }
+      if (ctx.canvas.height * ghost.y >= ctx.canvas.height-30) {
+	  if (ghost.y > 0.0) {
+	      ghost.y -= 1.0 / ctx.canvas.height;
+	  }
+      }
+  }
+  
+  function ghostMoveUpDown(ghost) {
+      if (ctx.canvas.width * ghost.x < 30) {
+	  if (ghost.x < 1.0) {
+	      ghost.x += 1.0 / ctx.canvas.width;
+	  }
+      }
+      if (ctx.canvas.width * ghost.x >= ctx.canvas.width-30) {
+	  if (ghost.x > 0.0) {
+	      ghost.x -= 1.0 / ctx.canvas.width;
+	  }
+      }
+      if (ctx.canvas.height * ghost.y < 30) {
+	  ghost.moveData = 0;
+      }
+      if (ctx.canvas.height * ghost.y >= ctx.canvas.height-30) {
+	  ghost.moveData = 1;
+      }
+      if (ghost.moveData == 1) {
+	  ghost.y -= 1.0 / ctx.canvas.height;
+      } else {
+	  ghost.y += 1.0 / ctx.canvas.height;
+      }
+  }
+
+  function ghostMoveLeftRight(ghost) {
+      if (ctx.canvas.height * ghost.y < 30) {
+	  if (ghost.y < 1.0) {
+	      ghost.y += 1.0 / ctx.canvas.height;
+	  }
+      }
+      if (ctx.canvas.height * ghost.y >= ctx.canvas.height-30) {
+	  if (ghost.y > 0.0) {
+	      ghost.y -= 1.0 / ctx.canvas.height;
+	  }
+      }
+      if (ctx.canvas.width * ghost.x < 30) {
+	  ghost.moveData = 0;
+      }
+      if (ctx.canvas.width * ghost.x >= ctx.canvas.width-30) {
+	  ghost.moveData = 1;
+      }
+      if (ghost.moveData == 1) {
+	  ghost.x -= 1.0 / ctx.canvas.width;
+      } else {
+	  ghost.x += 1.0 / ctx.canvas.width;
+      }
+  }
+
+  function ghostMoveRandom(ghost) {
+      var moveX = (Math.random()*2.0-1.0)/ctx.canvas.width;
+      var moveY = (Math.random()*2.0-1.0)/ctx.canvas.height;
+      var newX = ghost.x + moveX;
+      var newY = ghost.y + moveY;
+      if (newX >= 0.0 && newX < 1.0 && ctx.canvas.width * newX >= 30 && ctx.canvas.width * newX < ctx.canvas.width-30) {
+	  ghost.x = newX;
+      }
+      if (newY >= 0.0 && newY < 1.0 && ctx.canvas.height * newY >= 30 && ctx.canvas.height * newY < ctx.canvas.height-30) {
+	  ghost.y = newY;
+      }
+  }
+
+  function ghostMoveCircle(ghost) {
+      if (ghost.moveData == 0) {
+	  ghost.moveData = Math.random()*360.0;
+      } else {
+	  ghost.moveData = ghost.moveData + 1;
+      }
+      var moveX = 1.0 * Math.sin((ghost.moveData/180.0) * Math.PI)/ctx.canvas.width;
+      var moveY = 1.0 * Math.cos((ghost.moveData/180.0) * Math.PI)/ctx.canvas.height;
+      var newX = ghost.x + moveX;
+      var newY = ghost.y + moveY;
+      if (newX >= 0.0 && newX < 1.0 && ctx.canvas.width * newX >= 30 && ctx.canvas.width * newX < ctx.canvas.width-30) {
+	  ghost.x = newX;
+      }
+      if (newY >= 0.0 && newY < 1.0 && ctx.canvas.height * newY >= 30 && ctx.canvas.height * newY < ctx.canvas.height-30) {
+	  ghost.y = newY;
+      }
+  }
+
+  function ghostMoveDiag(ghost) {
+      if (ctx.canvas.height * ghost.y < 30) {
+	  ghost.moveData = Math.floor(ghost.moveData / 2)*2 + 0;
+      }
+      if (ctx.canvas.height * ghost.y >= ctx.canvas.height-30) {
+	  ghost.moveData = Math.floor(ghost.moveData / 2)*2 + 1;
+      }
+      if (ghost.moveData % 2 == 1) {
+	  ghost.y -= 1.0 / ctx.canvas.height;
+      } else {
+	  ghost.y += 1.0 / ctx.canvas.height;
+      }
+      if (ctx.canvas.width * ghost.x < 30) {
+	  ghost.moveData = ghost.moveData % 2;
+      }
+      if (ctx.canvas.width * ghost.x >= ctx.canvas.width-30) {
+	  ghost.moveData = ghost.moveData % 2 + 2;
+      }
+      if (Math.floor(ghost.moveData / 2) %2 == 1) {
+	  ghost.x -= 1.0 / ctx.canvas.width;
+      } else {
+	  ghost.x += 1.0 / ctx.canvas.width;
+      }
+  }
+  
+  function doMouseDown(e) {
+      var bbox = canvas.getBoundingClientRect();
+      var x = e.x - bbox.left *(canvas.width / bbox.width);
+      var y = e.y - bbox.top  * (canvas.height / bbox.height);
+      var i;
+      for (i=0; i<ghostArray.length; i++) {
+	  if (ghostArray[i].life <= 0) {
+	      continue;
+	  }
+	  var cx = ghostArray[i].x * canvas.width;
+	  var cy = ghostArray[i].y * canvas.height;
+	  if (cx-30 <= x && x <= cx+30 && cy-30 <= y && y <= cy+30) {
+	      ghostArray[i].life = ghostArray[i].life - 1;
+	  }
+      }
+  }
+  
+  function randomGhost() {
+      var i;
+      var moveFunction;
+      var r1;
+      for (i=0; i<numOfGhost; i++) {
+	  r1 = Math.floor(Math.random()*10000)%6;
+	  if (r1 == 0) {
+	      moveFunction = ghostMoveUpDown;
+	  } else if (r1 == 1) {
+	      moveFunction = ghostMoveLeftRight;
+	  } else if (r1 == 2) {
+	      moveFunction = ghostMoveRandom;
+	  } else if (r1 == 3) {
+	      moveFunction = ghostMoveCircle;
+	  } else if (r1 == 4) {
+	      moveFunction = ghostMoveDiag;
+	  } else {
+	      moveFunction = ghostMoveStill;
+	  }
+	  ghostArray[i] = new Ghost1(1, Math.random(), Math.random(), moveFunction, Math.floor(9 * Math.random()));
+      }
+  }
+
+  function drawGhost(x,y,g) {
+      ctx.drawImage(ghostImage, 60*(Math.floor(g/3) % 3), 60*(g%3), 60, 60, x, y, 60, 60);
+  }
+  
+  function draw() {
+      var i;
+      ctx.canvas.width  = window.innerWidth;
+      ctx.canvas.height = window.innerHeight;
+      ctx.drawImage(bgImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+      for (i=0; i<ghostArray.length; i++) {
+	  if (ghostArray[i].life <= 0) {
+	      continue;
+	  }
+	  drawGhost(ctx.canvas.width * ghostArray[i].x - 30, ctx.canvas.height * ghostArray[i].y - 30, ghostArray[i].type);
+      }
+  }
+
+  function drawWin() {
+      ctx.drawImage(winImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.font = "30px Arial";
+      ctx.textAlign = "center";
+      ctx.fillStyle = 'red';
+      ctx.fillText("Victory over Japan", canvas.width/2, canvas.height/2);
+      ctx.fillText("抗戰勝利", canvas.width/2, canvas.height*2/3);
+  }
+
+  function mainLoop() {
+      var i;
+      /* handle events */
+      var flag1=0;
+      for (i=0; i<ghostArray.length; i++) {
+	  if (ghostArray[i].life <= 0) {
+	      continue;
+	  }
+	  ghostArray[i].moveFunction(ghostArray[i]);
+	  flag1=1;
+      }
+      /* update screen */
+      if (flag1 == 0) {
+	  drawWin();
+      } else {
+	  draw();
+      }
+  }
+
+  function init() {
+      randomGhost();
+      setInterval(mainLoop, 40);
+      canvas.addEventListener("mousedown", doMouseDown, false);
+  }
+
+  init();
+</script>
+
+</body>
+</html>

@@ -170,7 +170,7 @@
 	  }
       } else if (state == 2) {
 	  pieT = pieT + 1;
-	  if (pieT >= 100) {
+	  if (pieT >= 200) {
 	      state = 3;
 	      pieT = 0;
 	  }
@@ -183,7 +183,7 @@
       canvas.addEventListener("mouseup", doMouseUp, false);
       canvas.addEventListener("mousemove", doMouseMove, false);
       tennoPosition = Math.random()*0.4+0.5;
-      setInterval(mainLoop, 40);
+      setInterval(mainLoop, 20);
   }
 
   init();

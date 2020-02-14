@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>夭皇陛下生日砸派團</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+<!--
+ https://openclipart.org/detail/291069/emperor-hirohito
+ https://openclipart.org/detail/292654/japanese-scene-4
+ https://openclipart.org/detail/167313/catapultslingshot
+ https://openclipart.org/detail/277836/pie-and-stuff
+-->
+<canvas id="myCanvas" width="100%" height="100%"></canvas>
+
+<script>
+  // JavaScript code goes here
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  var bgImage = new Image();
+  bgImage.src = 'Theatre.jpg'
+  var pieImage = new Image();
+  pieImage.src = '1492184594.png';
+  var tennoImage = new Image();
+  tennoImage.src = 'emperor-hirohito.svg.png';
+  var flingerImage = new Image();
+  flingerImage.src = 'schleuder.png';
+  var winImage = new Image();
+  winImage.src = 'win.jpg';
+  var tennoPosition = 0;
+  var pieForce = 0;
+  var pieAngle = 45.0*Math.PI/180.0;
+  const cX = 0.20168067226890757;
+  const cY = 0.7455621301775148;
+  const maxL = 0.12244897959183675;
+  var currentMouseX = 0;
+  var currentMouseY = 0;
+  const V = 0.08;
+  const G = 0.005;
+  var state = 0;
+  var pieX = cX;
+  var pieY = cY;
+  var pieV = 0;
+  var pieT = 0;
+  var pieProjectAngle = 0;
+  
+  function doMouseUp(e) {
+      var bbox = canvas.getBoundingClientRect();
+      var x = e.x - bbox.left *(canvas.width / bbox.width);
+      var y = e.y - bbox.top  * (canvas.height / bbox.height);
+
+      var xF = x/canvas.width;
+      var yF = y/canvas.height;
+
+      if (state != 0) {
+	  return;
+      }
+      
+      if (xF <= cX && yF >= cY) {
+	  pieX = cX;
+	  pieY = cY;
+	  pieT = 0;
+	  pieV = V * pieForce;
+	  pieProjectAngle = pieAngle;
+	  state = 1;
+      }
+      //console.log("x = "+x/canvas.width+" y = "+y/canvas.height);
+  }
+
+  function doMouseMove(e) {
+      var bbox = canvas.getBoundingClientRect();
+      var x = e.x - bbox.left *(canvas.width / bbox.width);
+      var y = e.y - bbox.top  * (canvas.height / bbox.height);
+      var xF = x/canvas.width;
+      var yF = y/canvas.height;
+
+      currentMouseX = xF;
+      currentMouseY = yF;
+
+      if (xF <= cX && yF >= cY) {
+	  var dist1 = Math.sqrt((xF - cX) * (xF - cX) + (yF - cY) * (yF - cY));
+	  if (dist1 > maxL) {
+	      pieForce = 1;
+	  } else {
+	      pieForce = dist1 / maxL;
+	  }
+	  if (dist1 > 0) {
+	      pieAngle = Math.asin((yF-cY)/dist1);
+	  } else {
+	      pieAngle = 45.0*Math.PI/180.0;
+	  }
+      } else {
+	  pieForce = 0;
+	  pieAngle = 45.0*Math.PI/180.0;
+      }
+  }
+
+  
+  function draw() {
+      var i;
+      ctx.canvas.width  = window.innerWidth;
+      ctx.canvas.height = window.innerHeight;
+
+      if (state == 3) {
+	  ctx.drawImage(winImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+	  return;
+      }
+      
+      ctx.drawImage(bgImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.drawImage(flingerImage, 0.15*ctx.canvas.width, 0.7*ctx.canvas.height, 0.1*ctx.canvas.width, 0.2*ctx.canvas.height);
+      
+      ctx.translate(tennoPosition*ctx.canvas.width, (0.75+0.125)*ctx.canvas.height);
+      ctx.rotate(0);
+      ctx.drawImage(tennoImage, -0.1*ctx.canvas.width/2, -0.25*ctx.canvas.height/2, 0.1*ctx.canvas.width, 0.25*ctx.canvas.height);
+      ctx.rotate(-0);
+      ctx.translate(-tennoPosition*ctx.canvas.width, -(0.75+0.125)*ctx.canvas.height);
+
+      if (state == 0) {
+	  ctx.beginPath();
+	  ctx.moveTo((cX-0.035)*ctx.canvas.width, cY*ctx.canvas.height);
+	  ctx.lineTo((cX - maxL*pieForce*Math.cos(pieAngle))*ctx.canvas.width, (cY + maxL*pieForce*Math.sin(pieAngle))*ctx.canvas.height);
+	  ctx.stroke();
+
+	  ctx.translate((cX - maxL*pieForce*Math.cos(pieAngle))*ctx.canvas.width, (cY + maxL*pieForce*Math.sin(pieAngle))*ctx.canvas.height);
+	  ctx.rotate( (Math.PI/2-pieAngle) );
+	  ctx.drawImage(pieImage, -0.05*ctx.canvas.width/2, -0.05*ctx.canvas.height/2, 0.05*ctx.canvas.width, 0.05*ctx.canvas.height);
+	  ctx.rotate(-(Math.PI/2-pieAngle) );
+	  ctx.translate(-(cX - maxL*pieForce*Math.cos(pieAngle))*ctx.canvas.width, -(cY + maxL*pieForce*Math.sin(pieAngle))*ctx.canvas.height);
+      
+	  ctx.beginPath();
+	  ctx.moveTo((cX+0.035)*ctx.canvas.width, cY*ctx.canvas.height);
+	  ctx.lineTo((cX - (maxL+0.02)*pieForce*Math.cos(pieAngle))*ctx.canvas.width, (cY + (maxL+0.02)*pieForce*Math.sin(pieAngle))*ctx.canvas.height);
+	  ctx.stroke();
+      } else if (state == 1) {
+	  var piePosX = pieX + pieV * Math.cos(pieProjectAngle) * pieT;
+	  var piePosY = pieY + (-pieV) * Math.sin(pieProjectAngle) * pieT + 0.5*G*pieT*pieT;
+	  ctx.translate(piePosX*ctx.canvas.width, piePosY*ctx.canvas.height);
+	  ctx.rotate( (Math.PI/2-pieAngle) );
+	  ctx.drawImage(pieImage, -0.05*ctx.canvas.width/2, -0.05*ctx.canvas.height/2, 0.05*ctx.canvas.width, 0.05*ctx.canvas.height);
+	  ctx.rotate(-(Math.PI/2-pieAngle) );
+	  ctx.translate(-piePosX*ctx.canvas.width, -piePosY*ctx.canvas.height);
+      } else if (state == 2){
+	  ctx.beginPath();
+	  ctx.arc(tennoPosition*ctx.canvas.width, 0.805 * ctx.canvas.height, 0.02*ctx.canvas.width, 0, 2*Math.PI);
+	  ctx.fillStyle = "orange";
+	  ctx.fill();
+      }
+  }
+
+  function mainLoop() {
+      var i;
+      /* handle events */
+      var flag1=0;
+      if (state == 1) {
+	  pieT = pieT + 0.5;
+	  var piePosX = pieX + pieV * Math.cos(pieProjectAngle) * pieT;
+	  var piePosY = pieY + (-pieV) * Math.sin(pieProjectAngle) * pieT + 0.5*G*pieT*pieT;
+	  if (piePosY > 1.0 || piePosX > 1.0) {
+	      pieT = 0;
+	      state = 0;
+	  }
+	  var dist2 = (piePosX - tennoPosition) * (piePosX - tennoPosition) + (piePosY - 0.805) * (piePosY - 0.805);
+	  if (dist2 < 0.02*0.02) {
+	      state = 2;
+	      pieT = 0;
+	  }
+      } else if (state == 2) {
+	  pieT = pieT + 1;
+	  if (pieT >= 100) {
+	      state = 3;
+	      pieT = 0;
+	  }
+      }
+      /* update screen */
+      draw();
+  }
+
+  function init() {
+      canvas.addEventListener("mouseup", doMouseUp, false);
+      canvas.addEventListener("mousemove", doMouseMove, false);
+      tennoPosition = Math.random()*0.4+0.5;
+      setInterval(mainLoop, 40);
+  }
+
+  init();
+</script>
+
+</body>
+</html>
